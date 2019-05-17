@@ -1,0 +1,62 @@
+
+Hivency technical test
+
+
+##### INTRO #####
+
+Bzzzz !!! Welcome to the hive !
+
+Here in Hivency we have some famous bees. They all use Instagram or Youtube.
+We also have many kind of Honey. We give some Honey to our bees and in exhange they do a Post on
+youtube or instagram to promote our tasty Honey.
+
+Our Bee can choose between many kind of Honey.
+For that they do it online on a dedicated store where all the Honeys are FREE !
+For each kind of Honey we, at Hivency, create a Campaign with some condition.
+The red-honey is only for the bee famous on Youtube.
+The pink-honey is only for the bee famous on Instgram.
+The dark-honey is only for the bee famous on Youtube tha are at least 18 year old
+
+
+##### SPECIFICATION #####
+
+We have Users who can have many networks (Instagram(s) or/and youtube(s))
+
+You have to implement the model Campaign. A campaign have some criterias.
+
+Here is the list of criteria you have to implement, but feel free to add some:
+ - Criteria Network, the network the campaign is in (youtube or instagram)
+ - Criteria Views, the number of views the network must have (at least)
+ - Criteria Like, the number of views the network must have (at least)
+ - Criteria Subscribers, the number of views the network must have (at least)
+ - Criteria Age, the age the user must have (Beetween 18 / 45 for exemple)
+ - Criteria Country, the country the user must live in.
+
+One campaign must have at least the Network criteria, the others are optional.
+
+You must implement the endpoint Store.
+
+The endpoint must return a list of Campaign matched by a specific user (the one loged in).
+
+For example: 
+
+Campaign 1 : Criteria Network = Youtube, Criteria subscribers = 5_000
+Campaign 2 : Criteria Network = Youtube, Criteria subscribers = 10_000
+Campaign 3 : Criteria Network = Instagram
+
+User1 => Network1 = Instagram
+         Network2 = Youtube, subscribers = 7_000
+
+The store will return (When loged as User1) the campaigns 1 and 3
+
+The views column must be always nil for Instagram, because Instagram has no views metrics.
+So no one can match a campaign with criteria network = Instgram and criteria views.
+
+
+Feel free to add unit test.
+You can use any gems.
+You can do an API or render HTML as you want.
+
+The test is willingly blurry so you can take your time to structure your code, have quality commit versioning and expand the technical test with other features.
+
+good luck, bzzzzz ;)
