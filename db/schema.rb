@@ -16,14 +16,15 @@ ActiveRecord::Schema.define(version: 20190518083121) do
   enable_extension "plpgsql"
 
   create_table "campaigns", force: :cascade do |t|
-    t.string    "network_criteria"
-    t.integer   "views_criteria"
-    t.integer   "likes_criteria"
-    t.integer   "subscribers_criteria"
-    t.daterange "age_criteria"
-    t.string    "country_criteria"
-    t.datetime  "created_at",           null: false
-    t.datetime  "updated_at",           null: false
+    t.string   "network_criteria"
+    t.integer  "views_criteria"
+    t.integer  "likes_criteria"
+    t.integer  "subscribers_criteria"
+    t.integer  "min_age_criteria"
+    t.integer  "max_age_criteria"
+    t.string   "country_criteria"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   create_table "networks", force: :cascade do |t|

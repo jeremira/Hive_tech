@@ -4,31 +4,22 @@ class Campaign < ApplicationRecord
   #
   # Return Campaigns matching a peculiar network
   #
-  scope :matching, ->(network) do
-    network_name(network.name)
+  scope :matching, ->(network, user) do
+    per_network(network.name)
+      .per_country(user.country)
       .views_less_than(network.views_count)
       .likes_less_than(network.likes_count)
       .subscribers_less_than(network.subscribers_count)
+      .age_include(user.age)
   end
 
-  scope :network_name,  ->(name) { where(network_criteria: name.to_s) }
-  scope :views_less_than, ->(count) { where(Campaign.arel_table[:views_criteria].lteq(count.to_i))}
-  scope :likes_less_than, ->(count) { where(Campaign.arel_table[:likes_criteria].lteq(count.to_i))}
-  scope :subscribers_less_than, ->(count) { where(Campaign.arel_table[:subscribers_criteria].lteq(count.to_i))}
-
-
-  # Campaign.per_network(network)
-  #
-  #User.arel_table[:id].gt(200)
-  # return Campaign qui match User.networks
-  #
-  # Campaign.where(network_criteria: network.name)
-  #         .where(views_criteria: > network.views_count)
-  #
-  # query = Campaign.all
-  #
-  # User.networks.each do |network|
-  #   Campaign.per_network(network)
-  # end
-
+  scope :per_network,  ->(name) { where(network_criteria: name.to_s) }
+  scope :per_country, ->(name) { where(country_criteria: name.to_s) }
+  scope :views_less_than, ->(count) { where(Campaign.arel_table[:views_criteria].lteq(count.to_i)) }
+  scope :likes_less_than, ->(count) { where(Campaign.arel_table[:likes_criteria].lteq(count.to_i)) }
+  scope :subscribers_less_than, ->(count) { where(Campaign.arel_table[:subscribers_criteria].lteq(count.to_i)) }
+  scope :age_include, -> (age) do
+    where(Campaign.arel_table[:min_age_criteria].lteq(age.to_i))
+      .where(Campaign.arel_table[:max_age_criteria].gteq(age.to_i))
+  end
 end

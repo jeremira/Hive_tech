@@ -5,7 +5,8 @@ class AddCampaignTable < ActiveRecord::Migration[5.0]
       t.integer    :views_criteria
       t.integer    :likes_criteria
       t.integer    :subscribers_criteria
-      t.daterange  :age_criteria
+      t.integer    :min_age_criteria
+      t.integer    :max_age_criteria
       t.string     :country_criteria
 
       t.timestamps
