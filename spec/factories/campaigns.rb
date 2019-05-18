@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :campaigns do
-    network
+  factory :campaign do
+    network_criteria {"network_test"}
   end
 end

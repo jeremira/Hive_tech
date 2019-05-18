@@ -7,5 +7,8 @@ RSpec.describe Campaign, type: :model do
     it "has a valid factory" do
       expect(campaign).to be_valid
     end
+    it "require a network" do
+      expect(build :campaign, network_criteria: nil).not_to be_valid
+    end
   end
 end

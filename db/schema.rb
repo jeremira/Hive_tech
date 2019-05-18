@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20190517105905) do
   enable_extension "plpgsql"
 
   create_table "campaigns", force: :cascade do |t|
-    t.integer   "network_id"
+    t.string    "network_criteria"
     t.integer   "views_criteria"
     t.integer   "likes_criteria"
     t.integer   "subscribers_criteria"
@@ -24,7 +24,6 @@ ActiveRecord::Schema.define(version: 20190517105905) do
     t.string    "country_criteria"
     t.datetime  "created_at",           null: false
     t.datetime  "updated_at",           null: false
-    t.index ["network_id"], name: "index_campaigns_on_network_id", using: :btree
   end
 
   create_table "networks", force: :cascade do |t|

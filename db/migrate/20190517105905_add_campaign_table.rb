@@ -1,7 +1,7 @@
 class AddCampaignTable < ActiveRecord::Migration[5.0]
   def change
     create_table :campaigns do |t|
-      t.references :network
+      t.string     :network_criteria
       t.integer    :views_criteria
       t.integer    :likes_criteria
       t.integer    :subscribers_criteria
