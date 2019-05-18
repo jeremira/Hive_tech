@@ -7,6 +7,16 @@ RSpec.describe Network, type: :model do
     it "has a valid factory" do
       expect(network).to be_valid
     end
-    #The views column must be always nil for Instagram, because Instagram has no views metrics.
+    context "with Instagram" do
+      it "dont accept null view count" do
+        expect(build :network, name: :instagram, views_count: 0).not_to be_valid
+      end
+      it "dont accept view count" do
+        expect(build :network, name: :instagram, views_count: 1).not_to be_valid
+      end
+      it "require nil views count" do
+        expect(build :network, name: :instagram, views_count: nil).to be_valid
+      end
+    end
   end
 end
