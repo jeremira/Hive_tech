@@ -13,7 +13,6 @@ RSpec.describe Campaign, type: :model do
   end
 
   describe ".matching" do
-    let(:network) {create :network, name: "youtube", likes_count: 400, views_count: 500, subscribers_count: 600}
     let(:match_name_campaign) {create :campaign, network_criteria: "youtube"}
     let(:match_count_campaign) {create :campaign, views_criteria: 500}
     let(:match_like_campaign) {create :campaign, likes_criteria: 400}
@@ -21,6 +20,9 @@ RSpec.describe Campaign, type: :model do
     let(:view_name_campaign) {create :campaign, network_criteria: "youtube", views_criteria: 500}
     let(:like_name_campaign) {create :campaign, network_criteria: "youtube", likes_criteria: 400}
     let(:subs_name_campaign) {create :campaign, network_criteria: "youtube", subscribers_criteria: 600}
+    let(:network) do
+      create :network, name: "youtube", likes_count: 400, views_count: 500, subscribers_count: 600
+    end
     let(:matching_campaign) do
       create :campaign, network_criteria: "youtube", likes_criteria:400, views_criteria: 500, subscribers_criteria: 600
     end

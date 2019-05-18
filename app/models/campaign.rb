@@ -9,7 +9,6 @@ class Campaign < ApplicationRecord
       .views_less_than(network.views_count)
       .likes_less_than(network.likes_count)
       .subscribers_less_than(network.subscribers_count)
-
   end
 
   scope :network_name,  ->(name) { where(network_criteria: name.to_s) }
