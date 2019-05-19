@@ -13,6 +13,7 @@ RSpec.describe Campaign, type: :model do
   end
 
   describe ".matching" do
+    let!(:instagram_campaign) {create :campaign, network_criteria: "instagram"}
     let!(:match_name_campaign) {create :campaign, network_criteria: "youtube"}
     let!(:match_count_campaign) {create :campaign, views_criteria: 500}
     let!(:match_like_campaign) {create :campaign, likes_criteria: 400}
@@ -24,13 +25,13 @@ RSpec.describe Campaign, type: :model do
     let!(:subs_name_campaign) {create :campaign, network_criteria: "youtube", subscribers_criteria: 600}
     let!(:country_name_campaign) {create :campaign, network_criteria: "youtube", country_criteria: "france"}
     let!(:campaign_deny1) do
-      create :campaign, network_criteria: "youtube", likes_criteria:400, views_criteria: 500, subscribers_criteria: 600
+      create :campaign, network_criteria: "youtube", likes_criteria:400, views_criteria: 500, subscribers_criteria: 601
     end
     let!(:campaign_deny2) do
-      create :campaign, network_criteria: "youtube", likes_criteria:400, views_criteria: 500
+      create :campaign, network_criteria: "youtube", likes_criteria:400, views_criteria: 501
     end
     let!(:campaign_deny3) do
-      create :campaign, network_criteria: "youtube", likes_criteria:400, views_criteria: 500, subscribers_criteria: 600,
+      create :campaign, network_criteria: "youtube", likes_criteria:401, views_criteria: 500, subscribers_criteria: 600,
                         country_criteria: "france"
     end
     let!(:network) do
@@ -40,7 +41,7 @@ RSpec.describe Campaign, type: :model do
       create :campaign, network_criteria: "youtube", likes_criteria: 400, views_criteria: 500, subscribers_criteria: 600,
                         country_criteria: "france", min_age_criteria: 20, max_age_criteria: 30
     end
-    let!(:user) {create :user, dob: 25.years.ago}
+    let!(:user) {create :user, dob: 25.years.ago, country: "france"}
     let!(:campaign) {create :campaign}
     let(:on_test) {Campaign.matching(network, user)}
 
@@ -48,10 +49,25 @@ RSpec.describe Campaign, type: :model do
       expect(on_test).to be_an ActiveRecord::Relation
     end
     it "return correct size relation" do
-      expect(on_test.size).to eq 1
+      expect(on_test.size).to eq 6
     end
     it "return the matching campaign" do
       expect(on_test).to include matching_campaign
+    end
+    it "return the matching campaign" do
+      expect(on_test).to include country_name_campaign
+    end
+    it "return the only network setup campaign" do
+      expect(on_test).to include match_name_campaign
+    end
+    it "return the view & name match campaign" do
+      expect(on_test).to include view_name_campaign
+    end
+    it "return the like & name campaign" do
+      expect(on_test).to include like_name_campaign
+    end
+    it "return the subs & name campaign" do
+      expect(on_test).to include subs_name_campaign
     end
   end
 
@@ -107,6 +123,7 @@ RSpec.describe Campaign, type: :model do
     let(:on_test) {Campaign.views_less_than(500)}
     let(:matching_campaign) {create :campaign, views_criteria: 500}
     let(:campaign) {create :campaign, views_criteria: 501}
+    let(:no_setup_campaign) { create :campaign, views_criteria: nil}
 
     context "with no campaign" do
       it "return an ActiveRecord relation" do
@@ -114,6 +131,18 @@ RSpec.describe Campaign, type: :model do
       end
       it "return an empty relation" do
         expect(on_test.size).to eq 0
+      end
+    end
+    context "with a non-setup campaign" do
+      before { no_setup_campaign }
+      it "return an ActiveRecord relation" do
+        expect(on_test).to be_an ActiveRecord::Relation
+      end
+      it "return a size 1 relation" do
+        expect(on_test.size).to eq 1
+      end
+      it "include correct campaign" do
+        expect(on_test).to include no_setup_campaign
       end
     end
     context "with a non-matching campaign" do
@@ -155,6 +184,7 @@ RSpec.describe Campaign, type: :model do
     let(:on_test) {Campaign.likes_less_than(500)}
     let(:matching_campaign) {create :campaign, likes_criteria: 500}
     let(:campaign) {create :campaign, likes_criteria: 501}
+    let(:no_setup_campaign) { create :campaign, likes_criteria: nil}
 
     context "with no campaign" do
       it "return an ActiveRecord relation" do
@@ -162,6 +192,18 @@ RSpec.describe Campaign, type: :model do
       end
       it "return an empty relation" do
         expect(on_test.size).to eq 0
+      end
+    end
+    context "with a non-setup campaign" do
+      before { no_setup_campaign }
+      it "return an ActiveRecord relation" do
+        expect(on_test).to be_an ActiveRecord::Relation
+      end
+      it "return a size 1 relation" do
+        expect(on_test.size).to eq 1
+      end
+      it "include correct campaign" do
+        expect(on_test).to include no_setup_campaign
       end
     end
     context "with a non-matching campaign" do
@@ -203,6 +245,7 @@ RSpec.describe Campaign, type: :model do
     let(:on_test) {Campaign.subscribers_less_than(500)}
     let(:matching_campaign) {create :campaign, subscribers_criteria: 500}
     let(:campaign) {create :campaign, subscribers_criteria: 501}
+    let(:no_setup_campaign) { create :campaign, subscribers_criteria: nil}
 
     context "with no campaign" do
       it "return an ActiveRecord relation" do
@@ -210,6 +253,18 @@ RSpec.describe Campaign, type: :model do
       end
       it "return an empty relation" do
         expect(on_test.size).to eq 0
+      end
+    end
+    context "with a non-setup campaign" do
+      before { no_setup_campaign }
+      it "return an ActiveRecord relation" do
+        expect(on_test).to be_an ActiveRecord::Relation
+      end
+      it "return a size 1 relation" do
+        expect(on_test.size).to eq 1
+      end
+      it "include correct campaign" do
+        expect(on_test).to include no_setup_campaign
       end
     end
     context "with a non-matching campaign" do
@@ -250,7 +305,8 @@ RSpec.describe Campaign, type: :model do
   describe ".per_country" do
     let(:on_test) {Campaign.per_country("italy")}
     let(:matching_campaign) {create :campaign, country_criteria: "italy"}
-    let(:campaign) {create :campaign}
+    let(:campaign) {create :campaign, country_criteria: "rohan"}
+    let(:no_setup_campaign) { create :campaign, country_criteria: nil}
 
     context "with no campaign" do
       it "return an ActiveRecord relation" do
@@ -258,6 +314,18 @@ RSpec.describe Campaign, type: :model do
       end
       it "return an empty relation" do
         expect(on_test.size).to eq 0
+      end
+    end
+    context "with a non-setup campaign" do
+      before { no_setup_campaign }
+      it "return an ActiveRecord relation" do
+        expect(on_test).to be_an ActiveRecord::Relation
+      end
+      it "return a size 1 relation" do
+        expect(on_test.size).to eq 1
+      end
+      it "include correct campaign" do
+        expect(on_test).to include no_setup_campaign
       end
     end
     context "with a non-matching campaign" do
@@ -299,6 +367,7 @@ RSpec.describe Campaign, type: :model do
     let(:on_test) {Campaign.age_include(50)}
     let(:matching_campaign) {create :campaign, min_age_criteria: 40, max_age_criteria: 50}
     let(:campaign) {create :campaign, min_age_criteria: 40, max_age_criteria: 49}
+    let(:no_setup_campaign) { create :campaign, min_age_criteria: nil, max_age_criteria: nil}
 
     context "with no campaign" do
       it "return an ActiveRecord relation" do
@@ -306,6 +375,18 @@ RSpec.describe Campaign, type: :model do
       end
       it "return an empty relation" do
         expect(on_test.size).to eq 0
+      end
+    end
+    context "with a non-setup campaign" do
+      before { no_setup_campaign }
+      it "return an ActiveRecord relation" do
+        expect(on_test).to be_an ActiveRecord::Relation
+      end
+      it "return a size 1 relation" do
+        expect(on_test.size).to eq 1
+      end
+      it "include correct campaign" do
+        expect(on_test).to include no_setup_campaign
       end
     end
     context "with a non-matching campaign" do
